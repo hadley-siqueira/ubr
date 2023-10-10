@@ -18,6 +18,8 @@ public:
     void decode_instruction();
     void execute_instruction();
 
+    void execute_type_i();
+
     std::string dump_registers();
 
 private:
@@ -26,6 +28,13 @@ private:
     Memory memory;
     uint64_t clock;
     uint32_t instruction;
+
+    int inst_type;
+    int inst_size;
+    int opcode;
+    int ra;
+    int rb;
+    uint64_t immd12;
 
 };
 

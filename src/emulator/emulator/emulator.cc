@@ -46,11 +46,36 @@ void Emulator::fetch_instruction() {
 }
 
 void Emulator::decode_instruction() {
+    inst_size = 4;
 
+    if ((instruction >> 30) & 1) {
+        inst_type = 0;
+        opcode = (((instruction >> 25) & 0x1f) << 3) | ((instruction >> 12) & 0x7);
+        ra = (instruction >> 20) & 0x1f;
+        rb = (instruction >> 15) & 0x1f;
+        immd12 = instruction & 0xfff;
+
+        if ((immd12 >> 11) & 1) {
+            immd12 = 0xfffffffffffff000 | immd12;
+        }
+    }
 }
 
 void Emulator::execute_instruction() {
+    switch (inst_type) {
+    case 0:
+        execute_type_i();
+        break;
+    }
+}
 
+void Emulator::execute_type_i() {
+    switch (opcode) {
+    case 0:
+        regs[ra] = regs[rb] + immd12;
+        ip += inst_size;
+        break;
+    }
 }
 
 std::string Emulator::dump_registers() {
