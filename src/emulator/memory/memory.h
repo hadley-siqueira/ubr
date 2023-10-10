@@ -20,6 +20,11 @@ public:
 
     uint64_t read_u64(uint64_t address);
 
+    void write64(uint64_t address, uint64_t value);
+    void write32(uint64_t address, uint64_t value);
+    void write16(uint64_t address, uint64_t value);
+    void write8(uint64_t address, uint64_t value);
+
 private:
     std::vector<uint8_t> bytes;
 };

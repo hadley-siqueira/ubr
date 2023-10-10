@@ -91,3 +91,25 @@ uint64_t Memory::read_u64(uint64_t address) {
 
     return value;
 }
+
+void Memory::write64(uint64_t address, uint64_t value) {
+    for (int i = 0; i < 8; ++i) {
+        bytes[address + i] = (value >> (64 - (i + 1) * 8)) & 0xff;
+    }
+}
+
+void Memory::write32(uint64_t address, uint64_t value) {
+    for (int i = 0; i < 4; ++i) {
+        bytes[address + i] = (value >> (32 - (i + 1) * 8)) & 0xff;
+    }
+}
+
+void Memory::write16(uint64_t address, uint64_t value) {
+    for (int i = 0; i < 2; ++i) {
+        bytes[address + i] = (value >> (16 - (i + 1) * 8)) & 0xff;
+    }
+}
+
+void Memory::write8(uint64_t address, uint64_t value) {
+    bytes[address] = value & 0xff;
+}

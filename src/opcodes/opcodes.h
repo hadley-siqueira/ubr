@@ -2,6 +2,14 @@
 #define OPCODES_H
 
 enum TYPE_I_OPCODES {
+    OPCODE_ADD = 0,
+    OPCODE_SUB,
+    OPCODE_AND,
+    OPCODE_OR,
+    OPCODE_XOR,
+};
+
+enum TYPE_IV_OPCODES {
     OPCODE_ADDI = 0,
     OPCODE_ANDI,
     OPCODE_ORI,
@@ -18,14 +26,6 @@ enum TYPE_I_OPCODES {
     OPCODE_SH,
     OPCODE_SB,
     OPCODE_BEQ,
-};
-
-enum TYPE_IV_OPCODES {
-    OPCODE_ADD = 0,
-    OPCODE_SUB,
-    OPCODE_AND,
-    OPCODE_OR,
-    OPCODE_XOR,
 };
 
 #endif

@@ -50,7 +50,7 @@ void Emulator::decode_instruction() {
     inst_size = 4;
 
     if ((instruction >> 30) & 1) {
-        inst_type = 0;
+        inst_type = 4;
         opcode = (((instruction >> 25) & 0x1f) << 3) | ((instruction >> 12) & 0x7);
         ra = (instruction >> 20) & 0x1f;
         rb = (instruction >> 15) & 0x1f;
@@ -59,12 +59,16 @@ void Emulator::decode_instruction() {
         if ((immd12 >> 11) & 1) {
             immd12 = 0xfffffffffffff000 | immd12;
         }
+    } else if (((instruction >> 29) & 0x7) == 5) {
+
+    } else {
+        opcode =
     }
 }
 
 void Emulator::execute_instruction() {
     switch (inst_type) {
-    case 0:
+    case 4:
         execute_type_i();
         break;
     }
@@ -80,6 +84,70 @@ void Emulator::execute_type_i() {
     case OPCODE_ANDI:
         regs[ra] = regs[rb] & immd12;
         ip += inst_size;
+        break;
+
+    case OPCODE_LD:
+        regs[ra] = memory.read_u64(regs[rb] + immd12);
+        ip += inst_size;
+        break;
+
+    case OPCODE_LW:
+        regs[ra] = memory.read_i32(regs[rb] + immd12);
+        ip += inst_size;
+        break;
+
+    case OPCODE_LWU:
+        regs[ra] = memory.read_u32(regs[rb] + immd12);
+        ip += inst_size;
+        break;
+
+    case OPCODE_LH:
+        regs[ra] = memory.read_i16(regs[rb] + immd12);
+        ip += inst_size;
+        break;
+
+    case OPCODE_LHU:
+        regs[ra] = memory.read_u16(regs[rb] + immd12);
+        ip += inst_size;
+        break;
+
+    case OPCODE_LB:
+        regs[ra] = memory.read_i8(regs[rb] + immd12);
+        ip += inst_size;
+        break;
+
+    case OPCODE_LBU:
+        regs[ra] = memory.read_u8(regs[rb] + immd12);
+        ip += inst_size;
+        break;
+
+    case OPCODE_SD:
+        memory.write64(regs[rb] + immd12, regs[ra]);
+        ip += inst_size;
+        break;
+
+    case OPCODE_SW:
+        memory.write32(regs[rb] + immd12, regs[ra]);
+        ip += inst_size;
+        break;
+
+    case OPCODE_SH:
+        memory.write16(regs[rb] + immd12, regs[ra]);
+        ip += inst_size;
+        break;
+
+    case OPCODE_SB:
+        memory.write8(regs[rb] + immd12, regs[ra]);
+        ip += inst_size;
+        break;
+
+    case OPCODE_BEQ:
+        if (regs[ra] == regs[rb]) {
+            ip += immd12 << 1;
+        } else {
+            ip += inst_size;
+        }
+
         break;
     }
 }
