@@ -17,6 +17,7 @@ enum TYPE_I_OPCODES {
     OPCODE_SW,
     OPCODE_SH,
     OPCODE_SB,
+    OPCODE_BEQ,
 };
 
 enum TYPE_IV_OPCODES {

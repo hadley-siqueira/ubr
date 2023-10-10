@@ -48,55 +48,55 @@ void Instruction::write_to(BinaryOutput* value) {
 
     case CMD_INST_XOR:
         write_binary_type_i(value, F_XOR);
-        break;
+        break;*/
 
     case CMD_INST_BEQ:
-        write_binary_type_iii(value, OP_BEQ);
+        write_binary_type_iii(value, OPCODE_BEQ);
         break;
 
     case CMD_INST_LD:
-        write_binary_type_ii(value, OP_LD);
+        write_binary_type_ii(value, OPCODE_LD);
         break;
 
     case CMD_INST_LW:
-        write_binary_type_ii(value, OP_LW);
+        write_binary_type_ii(value, OPCODE_LW);
         break;
 
     case CMD_INST_LWU:
-        write_binary_type_ii(value, OP_LWU);
+        write_binary_type_ii(value, OPCODE_LWU);
         break;
 
     case CMD_INST_LH:
-        write_binary_type_ii(value, OP_LH);
+        write_binary_type_ii(value, OPCODE_LH);
         break;
 
     case CMD_INST_LHU:
-        write_binary_type_ii(value, OP_LHU);
+        write_binary_type_ii(value, OPCODE_LHU);
         break;
 
     case CMD_INST_LB:
-        write_binary_type_ii(value, OP_LB);
+        write_binary_type_ii(value, OPCODE_LB);
         break;
 
     case CMD_INST_LBU:
-        write_binary_type_ii(value, OP_LBU);
+        write_binary_type_ii(value, OPCODE_LBU);
         break;
 
     case CMD_INST_SD:
-        write_binary_type_ii(value, OP_SD);
+        write_binary_type_ii(value, OPCODE_SD);
         break;
 
     case CMD_INST_SW:
-        write_binary_type_ii(value, OP_SW);
+        write_binary_type_ii(value, OPCODE_SW);
         break;
 
     case CMD_INST_SH:
-        write_binary_type_ii(value, OP_SH);
+        write_binary_type_ii(value, OPCODE_SH);
         break;
 
     case CMD_INST_SB:
-        write_binary_type_ii(value, OP_SB);
-        break;*/
+        write_binary_type_ii(value, OPCODE_SB);
+        break;
 
     case CMD_INST_ADDI:
         write_binary_type_ii(value, OPCODE_ADDI);
@@ -132,31 +132,33 @@ int Instruction::get_binary_type_i(int func) {
 }
 
 int Instruction::get_binary_type_ii(int func) {
-    int inst = 1;
+    int inst = 3;
 
-    inst = inst << 7 | func;
+    inst = inst << 5 | (func >> 3) & 0x1f;
     inst = inst << 5 | dest->to_int();
     inst = inst << 5 | src1->to_int();
-    inst = inst << 14 | src2->to_int() & 0x3fff;
+    inst = inst << 3 | func & 7;
+    inst = inst << 12 | src2->to_int() & 0xfff;
 
     return inst;
 }
 
 int Instruction::get_binary_type_iii(int func) {
-    int inst = 1;
+    int inst = 3;
 
-    inst = inst << 7 | func;
+    inst = inst << 5 | (func >> 3) & 0x1f;
     inst = inst << 5 | dest->to_int();
     inst = inst << 5 | src1->to_int();
+    inst = inst << 3 | func & 7;
 
     if (src2->get_kind() == VAL_NUMBER) {
         int addr = src2->to_int();
         addr = addr >> 1;
-        inst = inst << 14 | addr & 0x3fff;
+        inst = inst << 12 | addr & 0xfff;
     } else if (src2->get_kind() == VAL_ID) {
         int addr = src2->to_int() - offset;
         addr = addr >> 1;
-        inst = inst << 14 | addr & 0x3fff;
+        inst = inst << 12 | addr & 0xfff;
     }
 
     return inst;
