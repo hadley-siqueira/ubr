@@ -2,6 +2,7 @@
 #include <sstream>
 
 #include "emulator.h"
+#include "../../opcodes/opcodes.h"
 
 std::string hex64(uint64_t value) {
     std::stringstream out;
@@ -71,8 +72,13 @@ void Emulator::execute_instruction() {
 
 void Emulator::execute_type_i() {
     switch (opcode) {
-    case 0:
+    case OPCODE_ADDI:
         regs[ra] = regs[rb] + immd12;
+        ip += inst_size;
+        break;
+
+    case OPCODE_ANDI:
+        regs[ra] = regs[rb] & immd12;
         ip += inst_size;
         break;
     }

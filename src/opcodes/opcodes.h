@@ -1,0 +1,30 @@
+#ifndef OPCODES_H
+#define OPCODES_H
+
+enum TYPE_I_OPCODES {
+    OPCODE_ADDI = 0,
+    OPCODE_ANDI,
+    OPCODE_ORI,
+    OPCODE_XORI,
+    OPCODE_LD,
+    OPCODE_LW,
+    OPCODE_LWU,
+    OPCODE_LH,
+    OPCODE_LHU,
+    OPCODE_LB,
+    OPCODE_LBU,
+    OPCODE_SD,
+    OPCODE_SW,
+    OPCODE_SH,
+    OPCODE_SB,
+};
+
+enum TYPE_IV_OPCODES {
+    OPCODE_ADD = 0,
+    OPCODE_SUB,
+    OPCODE_AND,
+    OPCODE_OR,
+    OPCODE_XOR,
+};
+
+#endif
