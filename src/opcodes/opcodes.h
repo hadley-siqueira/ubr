@@ -1,12 +1,16 @@
 #ifndef OPCODES_H
 #define OPCODES_H
 
+#define LINK_REGISTER 31
+
 enum TYPE_I_OPCODES {
     OPCODE_ADD = 0,
     OPCODE_SUB,
     OPCODE_AND,
     OPCODE_OR,
     OPCODE_XOR,
+    OPCODE_SLT,
+    OPCODE_SLTU,
 };
 
 enum TYPE_IV_OPCODES {
@@ -14,6 +18,8 @@ enum TYPE_IV_OPCODES {
     OPCODE_ANDI,
     OPCODE_ORI,
     OPCODE_XORI,
+    OPCODE_SLTI,
+    OPCODE_SLTIU,
     OPCODE_LD,
     OPCODE_LW,
     OPCODE_LWU,

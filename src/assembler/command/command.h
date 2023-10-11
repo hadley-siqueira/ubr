@@ -17,7 +17,14 @@ enum CommandKind {
     CMD_INST_OR,
     CMD_INST_XOR,
 
+    CMD_INST_SLT,
+    CMD_INST_SLTU,
+
     CMD_INST_BEQ,
+    CMD_INST_BLT,
+
+    CMD_INST_J,
+    CMD_INST_JAL,
 
     CMD_INST_LD,
     CMD_INST_LW,
@@ -33,6 +40,11 @@ enum CommandKind {
     CMD_INST_SB,
 
     CMD_INST_ADDI,
+    CMD_INST_ANDI,
+    CMD_INST_ORI,
+    CMD_INST_XORI,
+    CMD_INST_SLTI,
+    CMD_INST_SLTIU,
 };
 
 class Command {

@@ -50,8 +50,28 @@ void Instruction::write_to(BinaryOutput* value) {
         write_binary_type_i(value, OPCODE_XOR);
         break;
 
+    case CMD_INST_SLT:
+        write_binary_type_i(value, OPCODE_SLT);
+        break;
+
+    case CMD_INST_SLTU:
+        write_binary_type_i(value, OPCODE_SLTU);
+        break;
+
     case CMD_INST_BEQ:
         write_binary_type_iv_i(value, OPCODE_BEQ);
+        break;
+
+    case CMD_INST_BLT:
+        write_binary_type_iv_i(value, OPCODE_BLT);
+        break;
+
+    case CMD_INST_J:
+        write_binary_type_iii(value, false);
+        break;
+
+    case CMD_INST_JAL:
+        write_binary_type_iii(value, true);
         break;
 
     case CMD_INST_LD:
@@ -101,6 +121,26 @@ void Instruction::write_to(BinaryOutput* value) {
     case CMD_INST_ADDI:
         write_binary_type_iv(value, OPCODE_ADDI);
         break;
+
+    case CMD_INST_ANDI:
+        write_binary_type_iv(value, OPCODE_ANDI);
+        break;
+
+    case CMD_INST_ORI:
+        write_binary_type_iv(value, OPCODE_ORI);
+        break;
+
+    case CMD_INST_XORI:
+        write_binary_type_iv(value, OPCODE_XORI);
+        break;
+
+    case CMD_INST_SLTI:
+        write_binary_type_iv(value, OPCODE_SLTI);
+        break;
+
+    case CMD_INST_SLTIU:
+        write_binary_type_iv(value, OPCODE_SLTIU);
+        break;
     }
 }
 
@@ -111,6 +151,11 @@ void Instruction::write_binary_type_i(BinaryOutput* value, int func) {
 
 void Instruction::write_binary_type_iv(BinaryOutput* value, int opcode) {
     int inst = get_binary_type_iv(opcode);
+    value->append32(inst);
+}
+
+void Instruction::write_binary_type_iii(BinaryOutput *value, bool link) {
+    int inst = get_binary_type_iii(link);
     value->append32(inst);
 }
 
@@ -127,6 +172,22 @@ int Instruction::get_binary_type_i(int func) {
     inst = inst << 5 | src2->to_int();;
     inst = inst << 5 | dest->to_int();
     inst = inst << 10 | func & 0x3ff;
+
+    return inst;
+}
+
+int Instruction::get_binary_type_iii(bool link) {
+    int inst = link ? 11 : 10;
+
+    if (src1->get_kind() == VAL_NUMBER) {
+        int addr = src1->to_int();
+        addr = addr >> 1;
+        inst = inst << 28 | addr & 0xfffffff;
+    } else if (src1->get_kind() == VAL_ID) {
+        int addr = src1->to_int() - offset;
+        addr = addr >> 1;
+        inst = inst << 28 | addr & 0xfffffff;
+    }
 
     return inst;
 }

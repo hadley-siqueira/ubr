@@ -41,9 +41,10 @@ private:
     int ra;
     int rb;
     int rc;
-    uint64_t immd12;
-    uint64_t immd28;
-    uint64_t immd20;
+    int64_t immd12;
+    int64_t immd28;
+    int64_t immd20;
+    bool link;
 
 };
 

@@ -24,7 +24,14 @@ Parser::Parser() {
     opcodes_map["or"] = CMD_INST_OR;
     opcodes_map["xor"] = CMD_INST_XOR;
 
+    opcodes_map["slt"] = CMD_INST_SLT;
+    opcodes_map["sltu"] = CMD_INST_SLTU;
+
     opcodes_map["beq"] = CMD_INST_BEQ;
+    opcodes_map["blt"] = CMD_INST_BLT;
+
+    opcodes_map["j"] = CMD_INST_J;
+    opcodes_map["jal"] = CMD_INST_JAL;
 
     opcodes_map["ld"] = CMD_INST_LD;
     opcodes_map["lw"] = CMD_INST_LW;
@@ -34,13 +41,17 @@ Parser::Parser() {
     opcodes_map["lb"] = CMD_INST_LB;
     opcodes_map["lbu"] = CMD_INST_LBU;
 
-
     opcodes_map["sd"] = CMD_INST_SD;
     opcodes_map["sw"] = CMD_INST_SW;
     opcodes_map["sh"] = CMD_INST_SH;
     opcodes_map["sb"] = CMD_INST_SB;
 
     opcodes_map["addi"] = CMD_INST_ADDI;
+    opcodes_map["andi"] = CMD_INST_ANDI;
+    opcodes_map["ori"] = CMD_INST_ORI;
+    opcodes_map["xori"] = CMD_INST_XORI;
+    opcodes_map["slti"] = CMD_INST_SLTI;
+    opcodes_map["sltiu"] = CMD_INST_SLTIU;
 }
 
 Module* Parser::parse(std::string path) {
@@ -164,10 +175,17 @@ Command* Parser::parse_instruction(std::string op) {
     case CMD_INST_AND:
     case CMD_INST_OR:
     case CMD_INST_XOR:
+    case CMD_INST_SLT:
+    case CMD_INST_SLTU:
         return parse_instruction_reg_reg_reg(opcodes_map[op]);
 
     case CMD_INST_BEQ:
+    case CMD_INST_BLT:
         return parse_instruction_reg_reg_immd(opcodes_map[op]);
+
+    case CMD_INST_J:
+    case CMD_INST_JAL:
+        return parse_jump_instruction(opcodes_map[op]);
 
     case CMD_INST_LD:
     case CMD_INST_LW:
@@ -185,6 +203,11 @@ Command* Parser::parse_instruction(std::string op) {
         return parse_instruction_mem(opcodes_map[op]);
 
     case CMD_INST_ADDI:
+    case CMD_INST_ANDI:
+    case CMD_INST_ORI:
+    case CMD_INST_XORI:
+    case CMD_INST_SLTI:
+    case CMD_INST_SLTIU:
         return parse_instruction_reg_reg_immd(opcodes_map[op]);
     }
 
@@ -245,6 +268,12 @@ Command* Parser::parse_instruction_mem(int kind) {
     expect(TK_RPAREN);
 
     return inst;
+}
+
+Command* Parser::parse_jump_instruction(int kind) {
+    Instruction* inst = new Instruction(kind);
+
+    inst->set_src1(parse_operand());
 }
 
 std::string Parser::parse_id() {

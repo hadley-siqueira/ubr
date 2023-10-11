@@ -64,8 +64,10 @@ void Emulator::decode_instruction() {
         immd28 = instruction & 0xfffffff;
 
         if ((immd28 >> 27) & 1) {
-            immd28 = 0xf000000000000000 | immd28;
+            immd28 = 0xfffffffff0000000 | immd28;
         }
+
+        link = (instruction >> 28) & 0x1;
     } else {
         opcode = (instruction >> 25) & 0xf;
 
@@ -133,6 +135,16 @@ void Emulator::execute_type_i() {
         regs[rc] = regs[ra] ^ regs[rb];
         ip += inst_size;
         break;
+
+    case OPCODE_SLT:
+        regs[rc] = regs[ra] < regs[rb] ? 1 : 0;
+        ip += inst_size;
+        break;
+
+    case OPCODE_SLTU:
+        regs[rc] = ((unsigned) regs[ra]) < ((unsigned) regs[rb]) ? 1 : 0;
+        ip += inst_size;
+        break;
     }
 }
 
@@ -141,7 +153,11 @@ void Emulator::execute_type_ii() {
 }
 
 void Emulator::execute_type_iii() {
+    if (link) {
+        regs[LINK_REGISTER] = ip + inst_size;
+    }
 
+    ip = ip + (immd28 << 1);
 }
 
 void Emulator::execute_type_iv() {
@@ -153,6 +169,26 @@ void Emulator::execute_type_iv() {
 
     case OPCODE_ANDI:
         regs[ra] = regs[rb] & immd12;
+        ip += inst_size;
+        break;
+
+    case OPCODE_ORI:
+        regs[ra] = regs[rb] | immd12;
+        ip += inst_size;
+        break;
+
+    case OPCODE_XORI:
+        regs[ra] = regs[rb] ^ immd12;
+        ip += inst_size;
+        break;
+
+    case OPCODE_SLTI:
+        regs[ra] = regs[rb] < immd12 ? 1 : 0;
+        ip += inst_size;
+        break;
+
+    case OPCODE_SLTIU:
+        regs[ra] = ((unsigned) regs[rb]) < ((unsigned) immd12) ? 1 : 0;
         ip += inst_size;
         break;
 
