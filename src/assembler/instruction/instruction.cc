@@ -141,6 +141,10 @@ void Instruction::write_to(BinaryOutput* value) {
     case CMD_INST_SLTIU:
         write_binary_type_iv(value, OPCODE_SLTIU);
         break;
+
+    case CMD_INST_SYSCALL:
+        write_binary_type_iv(value, OPCODE_SYSCALL);
+        break;
     }
 }
 

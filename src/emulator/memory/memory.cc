@@ -1,4 +1,5 @@
 #include <fstream>
+#include <sstream>
 
 #include "memory.h"
 
@@ -7,9 +8,14 @@ void Memory::read_binary(std::string path) {
     std::ifstream fs;
 
     fs.open(path);
+    bytes.reserve(2048);
 
     while (fs.get(c)) {
         bytes.push_back(c);
+    }
+
+    while (bytes.size() < 2048) {
+        bytes.push_back(0);
     }
 }
 
@@ -112,4 +118,78 @@ void Memory::write16(uint64_t address, uint64_t value) {
 
 void Memory::write8(uint64_t address, uint64_t value) {
     bytes[address] = value & 0xff;
+}
+
+std::string hex8(uint64_t value) {
+    std::stringstream ss;
+
+    for (int i = 4; i >= 0; i -= 4) {
+        int k = (value >> i) & 0xf;
+
+        if (k < 10) {
+            ss << ((char) ('0' + k));
+        } else {
+            ss << ((char) ('a' + k - 10));
+        }
+    }
+
+    return ss.str();
+}
+
+std::string hex642(uint64_t value) {
+    std::stringstream out;
+
+    for (int i = 60; i >= 0; i -= 4) {
+        int k = (value >> i) & 0xf;
+
+        if (k < 10) {
+            out << (char) ('0' + k);
+        } else {
+            out << (char) ('a' + k - 10);
+        }
+    }
+
+    return out.str();
+}
+
+std::string Memory::dump() {
+    std::stringstream out;
+
+    for (int i = 0; i < bytes.size(); i += 16) {
+        std::stringstream ss;
+        ss << hex642(i) << "  ";
+
+        for (int j = 0; j < 8 && i + j < bytes.size(); ++j) {
+            ss << hex8(bytes[i + j]) << ' ';
+        }
+
+        ss << ' ';
+
+        for (int j = 8; j < 16 && i + j < bytes.size(); ++j) {
+            ss << hex8(bytes[i + j]) << ' ';
+        }
+
+        ss << ' ';
+
+        int col = ss.str().size();
+        while (col < 68) {
+            ++col;
+            ss << ' ';
+        }
+
+        ss << '|';
+        for (int j = 0; j < 16 && i + j < bytes.size(); ++j) {
+            if (bytes[i + j] >= 32 && bytes[i + j] <= 126) {
+                ss << ((char) (bytes[i + j]));
+            } else {
+                ss << '.';
+            }
+        }
+        ss << '|';
+
+        ss << '\n';
+        out << ss.str();
+    }
+
+    return out.str();
 }

@@ -32,6 +32,7 @@ Parser::Parser() {
 
     opcodes_map["j"] = CMD_INST_J;
     opcodes_map["jal"] = CMD_INST_JAL;
+    opcodes_map["jalr"] = CMD_INST_JALR;
 
     opcodes_map["ld"] = CMD_INST_LD;
     opcodes_map["lw"] = CMD_INST_LW;
@@ -52,6 +53,8 @@ Parser::Parser() {
     opcodes_map["xori"] = CMD_INST_XORI;
     opcodes_map["slti"] = CMD_INST_SLTI;
     opcodes_map["sltiu"] = CMD_INST_SLTIU;
+
+    opcodes_map["syscall"] = CMD_INST_SYSCALL;
 }
 
 Module* Parser::parse(std::string path) {
@@ -181,6 +184,7 @@ Command* Parser::parse_instruction(std::string op) {
 
     case CMD_INST_BEQ:
     case CMD_INST_BLT:
+    case CMD_INST_JALR:
         return parse_instruction_reg_reg_immd(opcodes_map[op]);
 
     case CMD_INST_J:
@@ -208,6 +212,7 @@ Command* Parser::parse_instruction(std::string op) {
     case CMD_INST_XORI:
     case CMD_INST_SLTI:
     case CMD_INST_SLTIU:
+    case CMD_INST_SYSCALL:
         return parse_instruction_reg_reg_immd(opcodes_map[op]);
     }
 
@@ -217,25 +222,38 @@ Command* Parser::parse_instruction(std::string op) {
 Command* Parser::parse_instruction_reg_reg_reg(int kind) {
     Instruction* inst = new Instruction(kind);
 
-    inst->set_dest(parse_operand());
+    inst->set_dest(parse_operand(true));
     expect(TK_COMMA);
 
-    inst->set_src1(parse_operand());
+    inst->set_src1(parse_operand(true));
+    expect(TK_COMMA);
+
+    inst->set_src2(parse_operand(true));
+    return inst;
+}
+
+Command* Parser::parse_instruction_reg_reg_immd(int kind) {
+    Instruction* inst = new Instruction(kind);
+
+    inst->set_dest(parse_operand(true));
+    expect(TK_COMMA);
+
+    inst->set_src1(parse_operand(true));
     expect(TK_COMMA);
 
     inst->set_src2(parse_operand());
     return inst;
 }
 
-Command* Parser::parse_instruction_reg_reg_immd(int kind) {
-    return parse_instruction_reg_reg_reg(kind);
-}
-
-Value* Parser::parse_operand() {
+Value* Parser::parse_operand(bool is_register) {
     Value* r = nullptr;
 
     if (lookahead(TK_ID)) {
-        r = new Value(VAL_ID, parse_id());
+        if (is_register) {
+            r = new Value(VAL_REG, parse_id());
+        } else {
+            r = new Value(VAL_ID, parse_id());
+        }
     } else if (match(TK_MODULO)) {
         expect(TK_NUMBER);
 
@@ -258,13 +276,13 @@ Value* Parser::parse_operand() {
 Command* Parser::parse_instruction_mem(int kind) {
     Instruction* inst = new Instruction(kind);
 
-    inst->set_dest(parse_operand());
+    inst->set_dest(parse_operand(true));
     expect(TK_COMMA);
 
     inst->set_src2(parse_operand());
     expect(TK_LPAREN);
 
-    inst->set_src1(parse_operand());
+    inst->set_src1(parse_operand(true));
     expect(TK_RPAREN);
 
     return inst;
@@ -274,6 +292,7 @@ Command* Parser::parse_jump_instruction(int kind) {
     Instruction* inst = new Instruction(kind);
 
     inst->set_src1(parse_operand());
+    return inst;
 }
 
 std::string Parser::parse_id() {

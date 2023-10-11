@@ -1,6 +1,9 @@
 #ifndef OPCODES_H
 #define OPCODES_H
 
+#define REG_V0 5
+#define REG_A0 7
+
 #define LINK_REGISTER 31
 
 enum TYPE_I_OPCODES {
@@ -33,6 +36,7 @@ enum TYPE_IV_OPCODES {
     OPCODE_SB,
     OPCODE_BEQ,
     OPCODE_BLT,
+    OPCODE_JALR,
     OPCODE_SYSCALL
 };
 

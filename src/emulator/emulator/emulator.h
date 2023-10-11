@@ -24,6 +24,7 @@ public:
     void execute_type_iv();
 
     std::string dump_registers();
+    std::string dump_memory();
 
 private:
     void execute_syscall();

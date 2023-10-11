@@ -25,6 +25,7 @@ enum CommandKind {
 
     CMD_INST_J,
     CMD_INST_JAL,
+    CMD_INST_JALR,
 
     CMD_INST_LD,
     CMD_INST_LW,
@@ -45,6 +46,8 @@ enum CommandKind {
     CMD_INST_XORI,
     CMD_INST_SLTI,
     CMD_INST_SLTIU,
+
+    CMD_INST_SYSCALL,
 };
 
 class Command {

@@ -3,6 +3,7 @@
 #include <iostream>
 #include "value.h"
 #include "../symbol_table/symbol_table.h"
+#include "../../opcodes/opcodes.h"
 
 std::map<std::string, int> regs_map = {
     {"0", 0},
@@ -37,6 +38,8 @@ std::map<std::string, int> regs_map = {
     {"29", 29},
     {"30", 30},
     {"31", 31},
+    {"a0", REG_A0},
+    {"v0", REG_V0},
 };
 
 Value::Value(int kind) {
@@ -75,7 +78,7 @@ int Value::to_int() {
         if (sym && sym->get_kind() == SYM_LABEL) {
             label = (Label*) sym->get_descriptor();
             return label->get_offset();
-        } 
+        }
 
         break;
     }

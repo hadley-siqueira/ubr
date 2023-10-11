@@ -25,6 +25,8 @@ public:
     void write16(uint64_t address, uint64_t value);
     void write8(uint64_t address, uint64_t value);
 
+    std::string dump();
+
 private:
     std::vector<uint8_t> bytes;
 };

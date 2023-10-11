@@ -1,5 +1,6 @@
 #include <fstream>
 #include <sstream>
+#include <iostream>
 
 #include "emulator.h"
 #include "../../opcodes/opcodes.h"
@@ -26,6 +27,8 @@ Emulator::Emulator() {
     for (int i = 0; i < 32; ++i) {
         regs[i] = 0;
     }
+
+    regs[30] = 2040;
 }
 
 Emulator::~Emulator() {
@@ -90,6 +93,8 @@ void Emulator::decode_instruction() {
 }
 
 void Emulator::execute_instruction() {
+    regs[0] = 0;
+
     switch (inst_type) {
     case 1:
         execute_type_i();
@@ -263,8 +268,13 @@ void Emulator::execute_type_iv() {
         }
         break;
 
+    case OPCODE_JALR:
+        ip = regs[LINK_REGISTER];
+        break;
+
     case OPCODE_SYSCALL:
         execute_syscall();
+        ip += inst_size;
         break;
     }
 }
@@ -289,6 +299,12 @@ std::string Emulator::dump_registers() {
     return out.str();
 }
 
-void Emulator::execute_syscall() {
+std::string Emulator::dump_memory() {
+    return memory.dump();
+}
 
+void Emulator::execute_syscall() {
+    if (regs[REG_V0] == 1) {
+        std::cout << regs[REG_A0];
+    }
 }
