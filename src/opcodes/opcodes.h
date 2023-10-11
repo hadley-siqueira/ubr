@@ -26,6 +26,8 @@ enum TYPE_IV_OPCODES {
     OPCODE_SH,
     OPCODE_SB,
     OPCODE_BEQ,
+    OPCODE_BLT,
+    OPCODE_SYSCALL
 };
 
 #endif

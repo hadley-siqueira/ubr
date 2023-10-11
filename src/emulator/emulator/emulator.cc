@@ -60,21 +60,91 @@ void Emulator::decode_instruction() {
             immd12 = 0xfffffffffffff000 | immd12;
         }
     } else if (((instruction >> 29) & 0x7) == 5) {
+        inst_type = 3;
+        immd28 = instruction & 0xfffffff;
 
+        if ((immd28 >> 27) & 1) {
+            immd28 = 0xf000000000000000 | immd28;
+        }
     } else {
-        opcode =
+        opcode = (instruction >> 25) & 0xf;
+
+        if (opcode == 0) {
+            inst_type = 1;
+            opcode = instruction & 0x3ff;
+            ra = (instruction >> 20) & 0x1f;
+            rb = (instruction >> 15) & 0x1f;
+            rc = (instruction >> 10) & 0x1f;
+        } else {
+            inst_type = 2;
+            ra = (instruction >> 20) & 0x1f;
+            immd20 = instruction & 0xfffff;
+
+            if ((immd20 >> 19) & 1) {
+                immd20 = 0xfffffffffff00000 | immd20;
+            }
+        }
     }
 }
 
 void Emulator::execute_instruction() {
     switch (inst_type) {
-    case 4:
+    case 1:
         execute_type_i();
+        break;
+
+    case 2:
+        execute_type_ii();
+        break;
+
+    case 3:
+        execute_type_iii();
+        break;
+
+    case 4:
+        execute_type_iv();
         break;
     }
 }
 
 void Emulator::execute_type_i() {
+    switch (opcode) {
+    case OPCODE_ADD:
+        regs[rc] = regs[ra] + regs[rb];
+        ip += inst_size;
+        break;
+
+    case OPCODE_SUB:
+        regs[rc] = regs[ra] - regs[rb];
+        ip += inst_size;
+        break;
+
+    case OPCODE_AND:
+        regs[rc] = regs[ra] & regs[rb];
+        ip += inst_size;
+        break;
+
+    case OPCODE_OR:
+        regs[rc] = regs[ra] | regs[rb];
+        ip += inst_size;
+        break;
+
+    case OPCODE_XOR:
+        regs[rc] = regs[ra] ^ regs[rb];
+        ip += inst_size;
+        break;
+    }
+}
+
+void Emulator::execute_type_ii() {
+
+}
+
+void Emulator::execute_type_iii() {
+
+}
+
+void Emulator::execute_type_iv() {
     switch (opcode) {
     case OPCODE_ADDI:
         regs[ra] = regs[rb] + immd12;
@@ -147,7 +217,18 @@ void Emulator::execute_type_i() {
         } else {
             ip += inst_size;
         }
+        break;
 
+    case OPCODE_BLT:
+        if (regs[ra] < regs[rb]) {
+            ip += immd12 << 1;
+        } else {
+            ip += inst_size;
+        }
+        break;
+
+    case OPCODE_SYSCALL:
+        execute_syscall();
         break;
     }
 }
@@ -170,4 +251,8 @@ std::string Emulator::dump_registers() {
     }
 
     return out.str();
+}
+
+void Emulator::execute_syscall() {
+
 }

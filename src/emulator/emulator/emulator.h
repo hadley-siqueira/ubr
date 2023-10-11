@@ -19,8 +19,14 @@ public:
     void execute_instruction();
 
     void execute_type_i();
+    void execute_type_ii();
+    void execute_type_iii();
+    void execute_type_iv();
 
     std::string dump_registers();
+
+private:
+    void execute_syscall();
 
 private:
     uint64_t ip;
@@ -34,7 +40,10 @@ private:
     int opcode;
     int ra;
     int rb;
+    int rc;
     uint64_t immd12;
+    uint64_t immd28;
+    uint64_t immd20;
 
 };
 
