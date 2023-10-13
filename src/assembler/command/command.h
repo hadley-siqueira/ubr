@@ -21,7 +21,11 @@ enum CommandKind {
     CMD_INST_SLTU,
 
     CMD_INST_BEQ,
+    CMD_INST_BNE,
     CMD_INST_BLT,
+    CMD_INST_BGE,
+    CMD_INST_BLTU,
+    CMD_INST_BGEU,
 
     CMD_INST_J,
     CMD_INST_JAL,
@@ -47,7 +51,7 @@ enum CommandKind {
     CMD_INST_SLTI,
     CMD_INST_SLTIU,
 
-    CMD_INST_SYSCALL,
+    CMD_INST_ECALL,
 };
 
 class Command {

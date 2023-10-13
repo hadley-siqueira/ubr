@@ -62,8 +62,24 @@ void Instruction::write_to(BinaryOutput* value) {
         write_binary_type_iv_i(value, OPCODE_BEQ);
         break;
 
+    case CMD_INST_BNE:
+        write_binary_type_iv_i(value, OPCODE_BNE);
+        break;
+
     case CMD_INST_BLT:
         write_binary_type_iv_i(value, OPCODE_BLT);
+        break;
+
+    case CMD_INST_BGE:
+        write_binary_type_iv_i(value, OPCODE_BGE);
+        break;
+
+    case CMD_INST_BLTU:
+        write_binary_type_iv_i(value, OPCODE_BLTU);
+        break;
+
+    case CMD_INST_BGEU:
+        write_binary_type_iv_i(value, OPCODE_BGEU);
         break;
 
     case CMD_INST_J:
@@ -142,8 +158,8 @@ void Instruction::write_to(BinaryOutput* value) {
         write_binary_type_iv(value, OPCODE_SLTIU);
         break;
 
-    case CMD_INST_SYSCALL:
-        write_binary_type_iv(value, OPCODE_SYSCALL);
+    case CMD_INST_ECALL:
+        write_binary_type_iv(value, OPCODE_ECALL);
         break;
     }
 }

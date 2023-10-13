@@ -29,14 +29,15 @@ Emulator::Emulator() {
     }
 
     regs[30] = 2040;
+    memory = new Memory();
 }
 
 Emulator::~Emulator() {
-
+    delete memory;
 }
 
 void Emulator::read_binary(std::string path) {
-    memory.read_binary(path);
+    memory->read_binary(path);
 }
 
 void Emulator::tick() {
@@ -46,7 +47,7 @@ void Emulator::tick() {
 }
 
 void Emulator::fetch_instruction() {
-    instruction = memory.read_u32(ip);
+    instruction = memory->read_u32(ip);
 }
 
 void Emulator::decode_instruction() {
@@ -198,57 +199,57 @@ void Emulator::execute_type_iv() {
         break;
 
     case OPCODE_LD:
-        regs[ra] = memory.read_u64(regs[rb] + immd12);
+        regs[ra] = memory->read_u64(regs[rb] + immd12);
         ip += inst_size;
         break;
 
     case OPCODE_LW:
-        regs[ra] = memory.read_i32(regs[rb] + immd12);
+        regs[ra] = memory->read_i32(regs[rb] + immd12);
         ip += inst_size;
         break;
 
     case OPCODE_LWU:
-        regs[ra] = memory.read_u32(regs[rb] + immd12);
+        regs[ra] = memory->read_u32(regs[rb] + immd12);
         ip += inst_size;
         break;
 
     case OPCODE_LH:
-        regs[ra] = memory.read_i16(regs[rb] + immd12);
+        regs[ra] = memory->read_i16(regs[rb] + immd12);
         ip += inst_size;
         break;
 
     case OPCODE_LHU:
-        regs[ra] = memory.read_u16(regs[rb] + immd12);
+        regs[ra] = memory->read_u16(regs[rb] + immd12);
         ip += inst_size;
         break;
 
     case OPCODE_LB:
-        regs[ra] = memory.read_i8(regs[rb] + immd12);
+        regs[ra] = memory->read_i8(regs[rb] + immd12);
         ip += inst_size;
         break;
 
     case OPCODE_LBU:
-        regs[ra] = memory.read_u8(regs[rb] + immd12);
+        regs[ra] = memory->read_u8(regs[rb] + immd12);
         ip += inst_size;
         break;
 
     case OPCODE_SD:
-        memory.write64(regs[rb] + immd12, regs[ra]);
+        memory->write64(regs[rb] + immd12, regs[ra]);
         ip += inst_size;
         break;
 
     case OPCODE_SW:
-        memory.write32(regs[rb] + immd12, regs[ra]);
+        memory->write32(regs[rb] + immd12, regs[ra]);
         ip += inst_size;
         break;
 
     case OPCODE_SH:
-        memory.write16(regs[rb] + immd12, regs[ra]);
+        memory->write16(regs[rb] + immd12, regs[ra]);
         ip += inst_size;
         break;
 
     case OPCODE_SB:
-        memory.write8(regs[rb] + immd12, regs[ra]);
+        memory->write8(regs[rb] + immd12, regs[ra]);
         ip += inst_size;
         break;
 
@@ -268,13 +269,41 @@ void Emulator::execute_type_iv() {
         }
         break;
 
+    case OPCODE_BLTU:
+        if ((unsigned) regs[ra] < (unsigned) regs[rb]) {
+            ip += immd12 << 1;
+        } else {
+            ip += inst_size;
+        }
+        break;
+
+    case OPCODE_BGE:
+        if (regs[ra] >= regs[rb]) {
+            ip += immd12 << 1;
+        } else {
+            ip += inst_size;
+        }
+        break;
+
+    case OPCODE_BGEU:
+        if ((unsigned) regs[ra] >= (unsigned) regs[rb]) {
+            ip += immd12 << 1;
+        } else {
+            ip += inst_size;
+        }
+        break;
+
     case OPCODE_JALR:
         ip = regs[LINK_REGISTER];
         break;
 
-    case OPCODE_SYSCALL:
-        execute_syscall();
-        ip += inst_size;
+    case OPCODE_ECALL:
+        eip = ip;
+        ip = ebase;
+        break;
+
+    case OPCODE_ERET:
+        ip = eip;
         break;
     }
 }
@@ -300,11 +329,5 @@ std::string Emulator::dump_registers() {
 }
 
 std::string Emulator::dump_memory() {
-    return memory.dump();
-}
-
-void Emulator::execute_syscall() {
-    if (regs[REG_V0] == 1) {
-        std::cout << regs[REG_A0];
-    }
+    return memory->dump();
 }

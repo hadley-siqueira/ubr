@@ -28,7 +28,11 @@ Parser::Parser() {
     opcodes_map["sltu"] = CMD_INST_SLTU;
 
     opcodes_map["beq"] = CMD_INST_BEQ;
+    opcodes_map["bne"] = CMD_INST_BNE;
     opcodes_map["blt"] = CMD_INST_BLT;
+    opcodes_map["bge"] = CMD_INST_BGE;
+    opcodes_map["bltu"] = CMD_INST_BLTU;
+    opcodes_map["bgeu"] = CMD_INST_BGE;
 
     opcodes_map["j"] = CMD_INST_J;
     opcodes_map["jal"] = CMD_INST_JAL;
@@ -54,7 +58,7 @@ Parser::Parser() {
     opcodes_map["slti"] = CMD_INST_SLTI;
     opcodes_map["sltiu"] = CMD_INST_SLTIU;
 
-    opcodes_map["syscall"] = CMD_INST_SYSCALL;
+    opcodes_map["syscall"] = CMD_INST_ECALL;
 }
 
 Module* Parser::parse(std::string path) {
@@ -183,7 +187,11 @@ Command* Parser::parse_instruction(std::string op) {
         return parse_instruction_reg_reg_reg(opcodes_map[op]);
 
     case CMD_INST_BEQ:
+    case CMD_INST_BNE
     case CMD_INST_BLT:
+    case CMD_INST_BGE:
+    case CMD_INST_BLTU:
+    case CMD_INST_BGEU:
     case CMD_INST_JALR:
         return parse_instruction_reg_reg_immd(opcodes_map[op]);
 
@@ -212,7 +220,7 @@ Command* Parser::parse_instruction(std::string op) {
     case CMD_INST_XORI:
     case CMD_INST_SLTI:
     case CMD_INST_SLTIU:
-    case CMD_INST_SYSCALL:
+    case CMD_INST_ECALL:
         return parse_instruction_reg_reg_immd(opcodes_map[op]);
     }
 

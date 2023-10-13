@@ -27,15 +27,17 @@ public:
     std::string dump_memory();
 
 private:
-    void execute_syscall();
+    Memory* memory;
+    uint64_t cycles;
 
-private:
+    // used to track state
     uint64_t ip;
+    uint64_t eip;
+    uint64_t ebase;
     int64_t regs[32];
-    Memory memory;
-    uint64_t clock;
-    uint32_t instruction;
 
+    // used for decoding
+    uint32_t instruction;
     int inst_type;
     int inst_size;
     int opcode;
@@ -46,7 +48,6 @@ private:
     int64_t immd28;
     int64_t immd20;
     bool link;
-
 };
 
 #endif
