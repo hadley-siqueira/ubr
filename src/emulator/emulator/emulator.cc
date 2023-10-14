@@ -160,6 +160,11 @@ void Emulator::execute_type_ii() {
         regs[ra] = immd20 << 12;
         ip += inst_size;
         break;
+
+    case OPCODE_AUIPC:
+        regs[ra] = (immd20 << 12) + ip;
+        ip += inst_size;
+        break;
     }
 }
 

@@ -51,6 +51,8 @@ enum CommandKind {
     CMD_INST_SLTI,
     CMD_INST_SLTIU,
     CMD_INST_LUI,
+    CMD_INST_AUIPC,
+    CMD_INST_LA,
 
     CMD_INST_ECALL,
 };

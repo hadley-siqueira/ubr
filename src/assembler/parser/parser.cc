@@ -57,7 +57,10 @@ Parser::Parser() {
     opcodes_map["xori"] = CMD_INST_XORI;
     opcodes_map["slti"] = CMD_INST_SLTI;
     opcodes_map["sltiu"] = CMD_INST_SLTIU;
+
     opcodes_map["lui"] = CMD_INST_LUI;
+    opcodes_map["auipc"] = CMD_INST_AUIPC;
+    opcodes_map["la"] = CMD_INST_LA;
 
     opcodes_map["ecall"] = CMD_INST_ECALL;
 }
@@ -225,7 +228,9 @@ Command* Parser::parse_instruction(std::string op) {
         return parse_instruction_reg_reg_immd(opcodes_map[op]);
 
     case CMD_INST_LUI:
-        return parse_lui(opcodes_map[op]);
+    case CMD_INST_AUIPC:
+    case CMD_INST_LA:
+        return parse_type_ii(opcodes_map[op]);
     }
 
     return nullptr;
@@ -307,7 +312,7 @@ Command* Parser::parse_jump_instruction(int kind) {
     return inst;
 }
 
-Command* Parser::parse_lui(int kind) {
+Command* Parser::parse_type_ii(int kind) {
     Instruction* inst = new Instruction(kind);
 
     inst->set_dest(parse_operand(true));

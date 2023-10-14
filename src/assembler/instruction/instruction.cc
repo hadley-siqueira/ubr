@@ -165,6 +165,10 @@ void Instruction::write_to(BinaryOutput* value) {
     case CMD_INST_LUI:
         write_binary_type_ii(value, OPCODE_LUI);
         break;
+
+    case CMD_INST_AUIPC:
+        write_binary_type_ii(value, OPCODE_AUIPC);
+        break;
     }
 }
 

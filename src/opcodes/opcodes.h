@@ -18,6 +18,7 @@ enum TYPE_I_OPCODES {
 
 enum TYPE_II_OPCODES {
     OPCODE_LUI = 1,
+    OPCODE_AUIPC,
 };
 
 enum TYPE_IV_OPCODES {

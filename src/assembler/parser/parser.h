@@ -28,7 +28,7 @@ private:
     Command* parse_instruction_reg_reg_immd(int kind);
     Command* parse_instruction_mem(int kind);
     Command* parse_jump_instruction(int kind);
-    Command* parse_lui(int kind);
+    Command* parse_type_ii(int kind);
     Value* parse_operand(bool is_register=false);
     void parse_string_directive();
 
