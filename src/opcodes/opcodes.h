@@ -16,6 +16,10 @@ enum TYPE_I_OPCODES {
     OPCODE_SLTU,
 };
 
+enum TYPE_II_OPCODES {
+    OPCODE_LUI = 1,
+};
+
 enum TYPE_IV_OPCODES {
     OPCODE_ADDI = 0,
     OPCODE_ANDI,

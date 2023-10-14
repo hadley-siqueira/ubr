@@ -155,7 +155,12 @@ void Emulator::execute_type_i() {
 }
 
 void Emulator::execute_type_ii() {
-
+    switch (opcode) {
+    case OPCODE_LUI:
+        regs[ra] = immd20 << 12;
+        ip += inst_size;
+        break;
+    }
 }
 
 void Emulator::execute_type_iii() {

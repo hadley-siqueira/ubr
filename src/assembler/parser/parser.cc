@@ -57,8 +57,9 @@ Parser::Parser() {
     opcodes_map["xori"] = CMD_INST_XORI;
     opcodes_map["slti"] = CMD_INST_SLTI;
     opcodes_map["sltiu"] = CMD_INST_SLTIU;
+    opcodes_map["lui"] = CMD_INST_LUI;
 
-    opcodes_map["syscall"] = CMD_INST_ECALL;
+    opcodes_map["ecall"] = CMD_INST_ECALL;
 }
 
 Module* Parser::parse(std::string path) {
@@ -187,7 +188,7 @@ Command* Parser::parse_instruction(std::string op) {
         return parse_instruction_reg_reg_reg(opcodes_map[op]);
 
     case CMD_INST_BEQ:
-    case CMD_INST_BNE
+    case CMD_INST_BNE:
     case CMD_INST_BLT:
     case CMD_INST_BGE:
     case CMD_INST_BLTU:
@@ -222,6 +223,9 @@ Command* Parser::parse_instruction(std::string op) {
     case CMD_INST_SLTIU:
     case CMD_INST_ECALL:
         return parse_instruction_reg_reg_immd(opcodes_map[op]);
+
+    case CMD_INST_LUI:
+        return parse_lui(opcodes_map[op]);
     }
 
     return nullptr;
@@ -298,6 +302,16 @@ Command* Parser::parse_instruction_mem(int kind) {
 
 Command* Parser::parse_jump_instruction(int kind) {
     Instruction* inst = new Instruction(kind);
+
+    inst->set_src1(parse_operand());
+    return inst;
+}
+
+Command* Parser::parse_lui(int kind) {
+    Instruction* inst = new Instruction(kind);
+
+    inst->set_dest(parse_operand(true));
+    expect(TK_COMMA);
 
     inst->set_src1(parse_operand());
     return inst;

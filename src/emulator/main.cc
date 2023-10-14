@@ -10,7 +10,7 @@ int main(int argc, char** argv) {
         emulator.tick();
     }
 
-//    std::cout << emulator.dump_registers() << std::endl;
+    std::cout << emulator.dump_registers() << std::endl;
 //    std::cout << emulator.dump_memory() << std::endl;
     return 0;
 }

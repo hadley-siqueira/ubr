@@ -161,6 +161,10 @@ void Instruction::write_to(BinaryOutput* value) {
     case CMD_INST_ECALL:
         write_binary_type_iv(value, OPCODE_ECALL);
         break;
+
+    case CMD_INST_LUI:
+        write_binary_type_ii(value, OPCODE_LUI);
+        break;
     }
 }
 
@@ -169,12 +173,17 @@ void Instruction::write_binary_type_i(BinaryOutput* value, int func) {
     value->append32(inst);
 }
 
+void Instruction::write_binary_type_ii(BinaryOutput* value, int opcode) {
+    int inst = get_binary_type_ii(opcode);
+    value->append32(inst);
+}
+
 void Instruction::write_binary_type_iv(BinaryOutput* value, int opcode) {
     int inst = get_binary_type_iv(opcode);
     value->append32(inst);
 }
 
-void Instruction::write_binary_type_iii(BinaryOutput *value, bool link) {
+void Instruction::write_binary_type_iii(BinaryOutput* value, bool link) {
     int inst = get_binary_type_iii(link);
     value->append32(inst);
 }
@@ -192,6 +201,16 @@ int Instruction::get_binary_type_i(int func) {
     inst = inst << 5 | src2->to_int();;
     inst = inst << 5 | dest->to_int();
     inst = inst << 10 | func & 0x3ff;
+
+    return inst;
+}
+
+int Instruction::get_binary_type_ii(int opcode) {
+    int inst = 4;
+
+    inst = inst << 4 | opcode & 0xf;
+    inst = inst << 5 | dest->to_int();
+    inst = inst << 20 | src1->to_int() & 0xfffff;
 
     return inst;
 }
