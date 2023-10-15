@@ -63,6 +63,10 @@ Parser::Parser() {
     opcodes_map["la"] = CMD_INST_LA;
 
     opcodes_map["ecall"] = CMD_INST_ECALL;
+
+    // check later
+    opcodes_map["csrw"] = CMD_INST_CSRW;
+    opcodes_map["csrr"] = CMD_INST_CSRR;
 }
 
 Module* Parser::parse(std::string path) {
@@ -70,10 +74,6 @@ Module* Parser::parse(std::string path) {
 
     idx = 0;
     tokens = sc.read(path);
-
-    // for (int i = 0; i < tokens.size(); ++i) {
-    //     std::cout << tokens[i].to_str() << '\n';
-    // }
 
     return parse_module();
 }
@@ -231,6 +231,12 @@ Command* Parser::parse_instruction(std::string op) {
     case CMD_INST_AUIPC:
     case CMD_INST_LA:
         return parse_type_ii(opcodes_map[op]);
+
+    // check later
+    case CMD_INST_CSRR:
+    case CMD_INST_CSRW:
+        return parse_instruction_reg_reg_immd(opcodes_map[op]);
+        break;
     }
 
     return nullptr;

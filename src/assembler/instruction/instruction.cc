@@ -174,6 +174,14 @@ void Instruction::write_to(BinaryOutput* value) {
         write_binary_type_iv_i(value, OPCODE_JALR);
         break;
 
+    case CMD_INST_CSRR:
+        write_binary_type_iv(value, OPCODE_CSRR);
+        break;
+
+    case CMD_INST_CSRW:
+        write_binary_type_iv(value, OPCODE_CSRW);
+        break;
+
     case CMD_INST_LA:
         write_load_address(value);
         break;
@@ -240,13 +248,7 @@ int Instruction::get_binary_type_i(int func) {
 }
 
 int Instruction::get_binary_type_ii(int opcode) {
-    int inst = 4;
-
-    inst = inst << 4 | opcode & 0xf;
-    inst = inst << 5 | dest->to_int();
-    inst = inst << 20 | src1->to_int() & 0xfffff;
-
-    return inst;
+    return get_binary_type_ii(opcode, dest->to_int(), src1->to_int());
 }
 
 int Instruction::get_binary_type_ii(int opcode, int rd, int immd) {

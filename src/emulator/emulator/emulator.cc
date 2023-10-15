@@ -309,18 +309,32 @@ void Emulator::execute_type_iv() {
         break;
 
     case OPCODE_ECALL:
-        eip = ip;
-        ip = ebase;
+        csr[EIP] = ip;
+        ip = csr[EBASE];
         break;
 
     case OPCODE_ERET:
-        ip = eip;
+        ip = csr[EIP];
+        break;
+
+    case OPCODE_CSRR:
+        regs[ra] = csr[immd12 & 0xfff];
+        ip += inst_size;
+        break;
+
+    case OPCODE_CSRW:
+        csr[immd12 & 0xfff] = regs[ra];
+        ip += inst_size;
         break;
     }
 }
 
 std::string Emulator::dump_registers() {
     std::stringstream out;
+
+    out << "ip: " << hex64(ip);
+    out << "    eip: " << hex64(csr[EIP]) << '\n';
+    out << "ebase: " << hex64(csr[EBASE]) << '\n';
 
     for (int i = 0; i < 32; ++i) {
         if (i % 4 == 0 && i > 0) {

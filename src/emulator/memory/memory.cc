@@ -1,5 +1,6 @@
 #include <fstream>
 #include <sstream>
+#include <iostream>
 
 #include "memory.h"
 
@@ -107,6 +108,10 @@ void Memory::write64(uint64_t address, uint64_t value) {
 void Memory::write32(uint64_t address, uint64_t value) {
     for (int i = 0; i < 4; ++i) {
         bytes[address + i] = (value >> (32 - (i + 1) * 8)) & 0xff;
+    }
+
+    if (address == 400) {
+        std::cout << (char) value;
     }
 }
 

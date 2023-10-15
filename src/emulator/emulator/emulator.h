@@ -32,9 +32,8 @@ private:
 
     // used to track state
     uint64_t ip;
-    uint64_t eip;
-    uint64_t ebase;
     int64_t regs[32];
+    uint64_t csr[4096];
 
     // used for decoding
     uint32_t instruction;

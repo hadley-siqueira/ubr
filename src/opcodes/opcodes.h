@@ -6,6 +6,9 @@
 
 #define LINK_REGISTER 31
 
+#define EIP 0
+#define EBASE 1
+
 enum TYPE_I_OPCODES {
     OPCODE_ADD = 0,
     OPCODE_SUB,
@@ -48,6 +51,8 @@ enum TYPE_IV_OPCODES {
     OPCODE_JALR,
     OPCODE_ECALL,
     OPCODE_ERET,
+    OPCODE_CSRR,
+    OPCODE_CSRW,
 };
 
 #endif

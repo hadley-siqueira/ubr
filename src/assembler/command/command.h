@@ -55,6 +55,10 @@ enum CommandKind {
     CMD_INST_LA,
 
     CMD_INST_ECALL,
+
+    // check later
+    CMD_INST_CSRR,
+    CMD_INST_CSRW,
 };
 
 class Command {
