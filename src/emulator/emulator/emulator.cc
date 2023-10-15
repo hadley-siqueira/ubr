@@ -304,7 +304,8 @@ void Emulator::execute_type_iv() {
         break;
 
     case OPCODE_JALR:
-        ip = regs[LINK_REGISTER];
+        ip = regs[rb] + (immd12 << 1);
+        regs[ra] = ip + 4;
         break;
 
     case OPCODE_ECALL:
