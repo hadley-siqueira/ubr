@@ -173,6 +173,10 @@ void Instruction::write_to(BinaryOutput* value) {
     case CMD_INST_JALR:
         write_binary_type_iv_i(value, OPCODE_JALR);
         break;
+
+    case CMD_INST_LA:
+        write_load_address(value);
+        break;
     }
 }
 
@@ -201,6 +205,28 @@ void Instruction::write_binary_type_iv_i(BinaryOutput* value, int opcode) {
     value->append32(inst);
 }
 
+void Instruction::write_load_address(BinaryOutput* value) {
+    int auipc = 0;
+    int addi = 0;
+    int rd = dest->to_int();
+    int addr = 0;
+    int addr20 = 0;
+    int addr12 = 0;
+
+    if (src1->get_kind() == VAL_NUMBER) {
+
+    } else if (src1->get_kind() == VAL_ID) {
+        addr = src1->to_int() - offset;
+        addr20 = addr >> 12;
+        addr12 = addr & 0xfff;
+    }
+
+    auipc = get_binary_type_ii(OPCODE_AUIPC, rd, addr20);
+    addi = get_binary_type_iv(OPCODE_ADDI, rd, rd, addr12);
+    value->append32(auipc);
+    value->append32(addi);
+}
+
 int Instruction::get_binary_type_i(int func) {
     int inst = 4;
 
@@ -219,6 +245,16 @@ int Instruction::get_binary_type_ii(int opcode) {
     inst = inst << 4 | opcode & 0xf;
     inst = inst << 5 | dest->to_int();
     inst = inst << 20 | src1->to_int() & 0xfffff;
+
+    return inst;
+}
+
+int Instruction::get_binary_type_ii(int opcode, int rd, int immd) {
+    int inst = 4;
+
+    inst = inst << 4 | opcode & 0xf;
+    inst = inst << 5 | rd;
+    inst = inst << 20 | immd & 0xfffff;
 
     return inst;
 }
@@ -251,6 +287,18 @@ int Instruction::get_binary_type_iv(int func) {
     return inst;
 }
 
+int Instruction::get_binary_type_iv(int func, int ra, int rb, int immd) {
+    int inst = 3;
+
+    inst = inst << 5 | (func >> 3) & 0x1f;
+    inst = inst << 5 | ra;
+    inst = inst << 5 | rb;
+    inst = inst << 3 | func & 7;
+    inst = inst << 12 | immd & 0xfff;
+
+    return inst;
+}
+
 int Instruction::get_binary_type_iv_i(int func) {
     int inst = 3;
 
@@ -273,5 +321,13 @@ int Instruction::get_binary_type_iv_i(int func) {
 }
 
 int Instruction::get_size() {
-    return 4;
+    int size = 4;
+
+    switch (kind) {
+    case CMD_INST_LA:
+        size = 8;
+        break;
+    }
+
+    return size;
 }

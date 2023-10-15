@@ -17,10 +17,13 @@ public:
     void write_binary_type_iv(BinaryOutput* value, int opcode);
     void write_binary_type_iii(BinaryOutput* value, bool link);
     void write_binary_type_iv_i(BinaryOutput* value, int opcode);
+    void write_load_address(BinaryOutput* value);
     int get_binary_type_i(int func);
     int get_binary_type_ii(int opcode);
+    int get_binary_type_ii(int opcode, int rd, int immd);
     int get_binary_type_iii(bool link);
     int get_binary_type_iv(int opcode);
+    int get_binary_type_iv(int func, int ra, int rb, int immd);
     int get_binary_type_iv_i(int opcode);
     int get_size();
 
