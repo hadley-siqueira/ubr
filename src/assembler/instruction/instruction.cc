@@ -162,6 +162,10 @@ void Instruction::write_to(BinaryOutput* value) {
         write_binary_type_iv(value, OPCODE_ECALL);
         break;
 
+    case CMD_INST_ERET:
+        write_binary_type_iv(value, OPCODE_ERET);
+        break;
+
     case CMD_INST_LUI:
         write_binary_type_ii(value, OPCODE_LUI);
         break;

@@ -2,6 +2,7 @@
 #define MEMORY_MANAGER_H
 
 #include "../memory/memory.h"
+#include "../device/device.h"
 
 class MemoryManager {
 public:
@@ -24,8 +25,12 @@ public:
     Memory* get_memory() const;
     void set_memory(Memory* value);
 
+    int devices_count();
+    void add_device(Device* device);
+
 private:
     Memory* memory;
+    std::vector<Device*> devices;
 };
 
 #endif

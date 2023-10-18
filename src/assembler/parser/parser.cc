@@ -63,6 +63,7 @@ Parser::Parser() {
     opcodes_map["la"] = CMD_INST_LA;
 
     opcodes_map["ecall"] = CMD_INST_ECALL;
+    opcodes_map["eret"] = CMD_INST_ERET;
 
     // check later
     opcodes_map["csrw"] = CMD_INST_CSRW;
@@ -225,6 +226,7 @@ Command* Parser::parse_instruction(std::string op) {
     case CMD_INST_SLTI:
     case CMD_INST_SLTIU:
     case CMD_INST_ECALL:
+    case CMD_INST_ERET:
         return parse_instruction_reg_reg_immd(opcodes_map[op]);
 
     case CMD_INST_LUI:

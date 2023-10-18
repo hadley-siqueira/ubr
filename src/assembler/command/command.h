@@ -55,6 +55,7 @@ enum CommandKind {
     CMD_INST_LA,
 
     CMD_INST_ECALL,
+    CMD_INST_ERET,
 
     // check later
     CMD_INST_CSRR,

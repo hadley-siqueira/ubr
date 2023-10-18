@@ -12,6 +12,7 @@ Emulator::Emulator() {
 
     processor->set_memory_manager(memory_manager);
     memory_manager->set_memory(memory);
+    memory_manager->add_device(new Device());
 }
 
 Emulator::~Emulator() {
