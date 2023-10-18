@@ -6,11 +6,9 @@ int main(int argc, char** argv) {
 
     emulator.read_binary(argv[1]);
 
-    for (int i = 0; i < 1500; ++i) {
-        emulator.tick();
-    }
+    emulator.run(1500);
 
     std::cout << emulator.dump_registers() << std::endl;
-//    std::cout << emulator.dump_memory() << std::endl;
+    std::cout << emulator.dump_memory() << std::endl;
     return 0;
 }

@@ -3,6 +3,7 @@
 #include <iostream>
 
 #include "memory.h"
+#include "../../utils/utils.h"
 
 void Memory::read_binary(std::string path) {
     char c;
@@ -109,10 +110,6 @@ void Memory::write32(uint64_t address, uint64_t value) {
     for (int i = 0; i < 4; ++i) {
         bytes[address + i] = (value >> (32 - (i + 1) * 8)) & 0xff;
     }
-
-    if (address == 400) {
-        std::cout << (char) value;
-    }
 }
 
 void Memory::write16(uint64_t address, uint64_t value) {
@@ -125,44 +122,12 @@ void Memory::write8(uint64_t address, uint64_t value) {
     bytes[address] = value & 0xff;
 }
 
-std::string hex8(uint64_t value) {
-    std::stringstream ss;
-
-    for (int i = 4; i >= 0; i -= 4) {
-        int k = (value >> i) & 0xf;
-
-        if (k < 10) {
-            ss << ((char) ('0' + k));
-        } else {
-            ss << ((char) ('a' + k - 10));
-        }
-    }
-
-    return ss.str();
-}
-
-std::string hex642(uint64_t value) {
-    std::stringstream out;
-
-    for (int i = 60; i >= 0; i -= 4) {
-        int k = (value >> i) & 0xf;
-
-        if (k < 10) {
-            out << (char) ('0' + k);
-        } else {
-            out << (char) ('a' + k - 10);
-        }
-    }
-
-    return out.str();
-}
-
 std::string Memory::dump() {
     std::stringstream out;
 
     for (int i = 0; i < bytes.size(); i += 16) {
         std::stringstream ss;
-        ss << hex642(i) << "  ";
+        ss << hex64(i) << "  ";
 
         for (int j = 0; j < 8 && i + j < bytes.size(); ++j) {
             ss << hex8(bytes[i + j]) << ' ';

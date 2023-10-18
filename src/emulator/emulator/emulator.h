@@ -4,6 +4,8 @@
 #include <string>
 #include <cstdint>
 #include "../memory/memory.h"
+#include "../processor/processor.h"
+#include "../memory_manager/memory_manager.h"
 
 class Emulator {
 public:
@@ -12,41 +14,14 @@ public:
 
 public:
     void read_binary(std::string path);
-
-    void tick();
-    void fetch_instruction();
-    void decode_instruction();
-    void execute_instruction();
-
-    void execute_type_i();
-    void execute_type_ii();
-    void execute_type_iii();
-    void execute_type_iv();
-
-    std::string dump_registers();
+    void run(uint64_t iters=0);
     std::string dump_memory();
+    std::string dump_registers();
 
 private:
     Memory* memory;
-    uint64_t cycles;
-
-    // used to track state
-    uint64_t ip;
-    int64_t regs[32];
-    uint64_t csr[4096];
-
-    // used for decoding
-    uint32_t instruction;
-    int inst_type;
-    int inst_size;
-    int opcode;
-    int ra;
-    int rb;
-    int rc;
-    int64_t immd12;
-    int64_t immd28;
-    int64_t immd20;
-    bool link;
+    MemoryManager* memory_manager;
+    Processor* processor;
 };
 
 #endif
