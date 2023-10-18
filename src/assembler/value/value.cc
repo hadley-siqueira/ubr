@@ -39,7 +39,25 @@ std::map<std::string, int> regs_map = {
     {"30", 30},
     {"31", 31},
     {"a0", REG_A0},
+    {"a1", REG_A1},
+    {"a2", REG_A2},
+    {"a3", REG_A3},
+    {"a4", REG_A4},
+    {"a5", REG_A5},
+    {"a6", REG_A6},
+    {"a7", REG_A7},
+    {"t0", REG_T0},
+    {"t1", REG_T1},
+    {"t2", REG_T2},
+    {"t3", REG_T3},
+    {"t4", REG_T4},
+    {"t5", REG_T5},
+    {"t6", REG_T6},
+    {"t7", REG_T7},
+    {"a0", REG_A0},
     {"v0", REG_V0},
+    {"sp", REG_SP},
+    {"lr", LINK_REGISTER}
 };
 
 Value::Value(int kind) {

@@ -2,7 +2,25 @@
 #define OPCODES_H
 
 #define REG_V0 5
-#define REG_A0 7
+
+#define REG_A0 6
+#define REG_A1 7
+#define REG_A2 8
+#define REG_A3 9
+#define REG_A4 10
+#define REG_A5 11
+#define REG_A6 12
+#define REG_A7 13
+#define REG_T0 14
+#define REG_T1 15
+#define REG_T2 16
+#define REG_T3 17
+#define REG_T4 18
+#define REG_T5 19
+#define REG_T6 20
+#define REG_T7 21
+
+#define REG_SP 30
 
 #define LINK_REGISTER 31
 
