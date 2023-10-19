@@ -251,6 +251,14 @@ void Processor::execute_type_iv() {
         }
         break;
 
+    case OPCODE_BNE:
+        if (regs[ra] != regs[rb]) {
+            ip += immd12 << 1;
+        } else {
+            ip += inst_size;
+        }
+        break;
+
     case OPCODE_BLT:
         if (regs[ra] < regs[rb]) {
             ip += immd12 << 1;
